@@ -1,43 +1,70 @@
-const nameInput = document.getElementById("name");
-const scoreInput = document.getElementById("score");
-const scores = document.getElementById("scores");   
-
-
-// Function to save score to Local Storage
 function saveScore() {
-  const name = nameInput.value;
-  const score = parseInt(scoreInput.value);
+    const name = document.getElementById("name").value.trim();
+    const score = document.getElementById("score").value.trim();
 
-  // Check if Local Storage already has scores
-  let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+    if (name === "" || score === "") {
+        alert("Please enter both a name and a score.");
+        return;
+    }
 
-  // Add new score to the array
-  highScores.push({ name, score });
+    // Get existing scores from localStorage, or initialize as an empty array
+    let scores = JSON.parse(localStorage.getItem("scores")) || [];
 
-  // Sort scores in descending order
-  highScores.sort((a, b) => b.score - a.score);
+    // Add the new score
+    scores.push({ name: name, score: parseInt(score) });
 
-  // Save the updated high scores to Local Storage
-  localStorage.setItem('highScores', JSON.stringify(highScores));   
+    // Sort the scores in descending order based on score
+    scores.sort((a, b) => b.score - a.score);
 
+    // Save the updated scores array back to localStorage
+    localStorage.setItem("scores", JSON.stringify(scores));
 
-  showScores();
+    // Clear the input fields
+    document.getElementById("name").value = "";
+    document.getElementById("score").value = "";
+
+    // Update the displayed scores
+    showScores();
 }
 
-// Function to show scores in div
 function showScores() {
-  const highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+    const scoresDiv = document.getElementById("scores");
+    scoresDiv.innerHTML = "";
 
-  if (highScores.length === 0) {
-    scores.innerHTML   
- = "No scores yet";
-    return;
-  }
+    // Get scores from localStorage
+    const scores = JSON.parse(localStorage.getItem("scores")) || [];
 
-  let tableHTML = `<table id='scores'><tr><th>Name</th><th>Score</th></tr>`;
-  highScores.forEach(score => {
-    tableHTML += `<tr><td>${score.name}</td><td>${score.score}</td></tr>`;
-  });
-  tableHTML += "</table>";
-  scores.innerHTML = tableHTML;
+    if (scores.length === 0) {
+        scoresDiv.innerHTML = "<p>No scores yet</p>";
+        return;
+    }
+
+    // Create a table element and assign it an id
+    const table = document.createElement("table");
+    table.id = "scoresTable"; // Set the id of the table to "scoresTable"
+
+    // Create and append the header row
+    const headerRow = document.createElement("tr");
+    const nameHeader = document.createElement("th");
+    nameHeader.textContent = "Name";
+    const scoreHeader = document.createElement("th");
+    scoreHeader.textContent = "Score";
+    headerRow.appendChild(nameHeader);
+    headerRow.appendChild(scoreHeader);
+    table.appendChild(headerRow);
+
+    // Create and append a row for each score
+    scores.forEach(scoreEntry => {
+        const row = document.createElement("tr");
+        const nameCell = document.createElement("td");
+        nameCell.textContent = scoreEntry.name;
+        const scoreCell = document.createElement("td");
+        scoreCell.textContent = scoreEntry.score;
+        row.appendChild(nameCell);
+        row.appendChild(scoreCell);
+        table.appendChild(row);
+    });
+
+    // Append the table to the scoresDiv
+    scoresDiv.appendChild(table);
 }
