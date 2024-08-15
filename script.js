@@ -34,7 +34,7 @@ function showScores() {
     return;
   }
 
-  let tableHTML = "<table id='scores'><tr><th>Name</th><th>Score</th></tr>";
+  let tableHTML = `<table id='scores'><tr><th>Name</th><th>Score</th></tr>`;
   highScores.forEach(score => {
     tableHTML += `<tr><td>${score.name}</td><td>${score.score}</td></tr>`;
   });
