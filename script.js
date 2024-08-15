@@ -26,7 +26,6 @@ function saveScore() {
     // Update the displayed scores
     showScores();
 }
-
 function showScores() {
     const scoresDiv = document.getElementById("scores");
     scoresDiv.innerHTML = "";
@@ -53,7 +52,7 @@ function showScores() {
     headerRow.appendChild(scoreHeader);
     table.appendChild(headerRow);
 
-    // Create and append a row for each score
+    // Create and append a row for each score, in the order they are stored
     scores.forEach(scoreEntry => {
         const row = document.createElement("tr");
         const nameCell = document.createElement("td");
